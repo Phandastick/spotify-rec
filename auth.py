@@ -24,11 +24,11 @@ def getToken():
     
     if(res.status_code == 200):
         resJson = res.json()
-        # print(resJson['access_token'])
+        print(res.text)
 
         return resJson['access_token']
     else:
-        print('Request for access token failed!')
+        print('auth.py> Request for access token failed!')
         return 
     
-# getToken()
+print(getToken())
