@@ -1,14 +1,13 @@
 # https://developer.spotify.com/dashboard/53ae987f426c4b45abc75b761d0bd49c/settings
 
 import requests
-import json
 from dotenv import dotenv_values
 
 config = dotenv_values()
 
 # print(config)
 
-def getAuth():
+def getToken():
     url = 'https://accounts.spotify.com/api/token'
     headers = {
         'Content-Type':'application/x-www-form-urlencoded'
@@ -23,10 +22,13 @@ def getAuth():
                 data=data,
                 headers=headers)
     
-    res
+    if(res.status_code == 200):
+        resJson = res.json()
+        # print(resJson['access_token'])
 
-    resJson = json.loads(res.content)
+        return resJson['access_token']
+    else:
+        print('Request for access token failed!')
+        return 
     
-    return resJson['access_token']
-
-print(getAuth())
+# getToken()
