@@ -9,13 +9,13 @@ playlistID = '467DXKl4bPoQ8rVfwm4kyl'
 # access_token = '1'
 
 def main():
-    body = initInfo()
+    body = getSeeds()
     tracks = getRecs(body) # list of strings
 
     updatePlaylist(tracks)
     return
 
-def initInfo():
+def getSeeds():
     if(not access_token):
         print('newTestPlaylist.py> Access token not found!')
         exit()
@@ -49,7 +49,7 @@ def getGenreList():
 
 
 def getRecs(data):
-    data = initInfo()
+    data = getSeeds()
     
     # print(data['artistList'])
     # print(data['genreList'])
@@ -117,7 +117,7 @@ def getStringID(array):
 
 # print(getArtistsList())
 
-# initInfo()
+# getSeeds()
 # print('Token: ', getToken())
 
 main()
