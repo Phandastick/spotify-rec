@@ -8,11 +8,24 @@ config = dotenv_values()
 # print(config)
 
 def getToken(choice):
-    if(choice == 'Client Credentials'):
-        token = clientCredentials()
-    elif (choice == 'Authorization Code'):
-        token = authorizationCode()
+    choice = choice.split(',')
+    authType = ""
+    scope = ""
     
+    if(len(choice)> 1):
+        authType = choice[0]
+        scope = choice[1]
+    else:
+        authType = choice[0]
+    
+
+    if(authType == 'Client Credentials'):
+        token = clientCredentials()
+    elif (authType == 'Authorization Code'):
+        token = authorizationCode(scope)
+    else:
+        print('auth.py> Invalid Choice!')
+
     return token
 
 def clientCredentials():
@@ -40,10 +53,11 @@ def clientCredentials():
         return 
     
 def authorizationCode(scope):
+    print('auth.py> Getting auth code...')
     url = 'https://accounts.spotify.com/authorize'
     client_id = config['CLIENT_ID']
     response_type = 'code'
-    redirect_url = 'http://localhost:8888'
+    redirect_url = 'http://localhost:5000/home'
 
     params = {
         'client_id': client_id,
@@ -57,4 +71,7 @@ def authorizationCode(scope):
         params=params
     )
 
+    return res
+
 # print(getToken())
+# print(getToken('Client Credentials'))
