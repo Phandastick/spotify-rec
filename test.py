@@ -1,9 +1,11 @@
+from flask import Flask, request
 
+app = Flask(__name__)
 
-scope = 'playlist-modify-public playlist-modify-private'
+@app.route('/dostuff')
+def dostuff():
+    print("Doing stuff")
+    print(request.args.get('params'))
 
-token = f'Authorization Code, {scope}'
-split = token.split(',')
-
-print(token)
-print(split)
+import auth
+print(auth.getEncodedClient())

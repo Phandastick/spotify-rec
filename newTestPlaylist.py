@@ -43,8 +43,9 @@ def getGenreList():
     resultList = random.sample(genresList, k=2)
     return ",".join(resultList)
 
-def getRecs(data, access_token):
-    data = getSeeds()
+def getRecs(seeds, access_token):
+
+    print('Calling getRecs with token:',access_token)
     
     # print(data['artistList'])
     # print(data['genreList'])
@@ -52,8 +53,8 @@ def getRecs(data, access_token):
     payload = {
         'limit': playlistLimit,
         'market': 'MY',
-        'seed_artists': data['artistList'],
-        'seed_genres': data['genreList']
+        'seed_artists': seeds['artistList'],
+        'seed_genres': seeds['genreList']
     }
 
     url = 'https://api.spotify.com/v1/recommendations'
@@ -66,6 +67,9 @@ def getRecs(data, access_token):
                        params=payload,
                        headers=headers)
     
+    if(res.status_code != 200):
+        print("newTestPlaylist.py> Something went wrong with recommendations!")
+        return
     resJson = json.loads(res.text)
     # print(resJson)
 
