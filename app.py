@@ -1,7 +1,7 @@
 import datetime
 from flask import Flask, jsonify, render_template,redirect, request, session
 import requests, auth
-import newTestPlaylist as spotifyHelper
+import playlist as spotifyHelper
 from auth import DOMAINURL
 
 app = Flask(__name__)

@@ -3,6 +3,7 @@
 Look, I get bored of the same 50 songs somehow in the discover weekly playlist by Spotify...
 
 So I made a thing
+[Playlist Link](https://open.spotify.com/playlist/467DXKl4bPoQ8rVfwm4kyl)
 
 ## New dailies
 
@@ -19,6 +20,22 @@ py -3 -m venv .venv
 pip install requirements.txt
 ```
 
-## Running
+Using pipenv
+```
+pipenv shell
+pipenv install requirements.txt
+```
 
-Currently using newTestPlaylist.py, literally just run main() lmfao
+## Running
+Use flask to start 'webapp' and run the api
+
+```
+flask run
+flask run --debug
+```
+
+1. Probably change playlist ID to yours in playlist.py
+2. Site should be running on 127.0.0.1
+3. Click on **login** button in order to use the /login route
+4. ¯\\_(ツ)_/¯
+5. yay
