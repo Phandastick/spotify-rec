@@ -9,8 +9,8 @@ app.config.update(
 )
 
 app.secret_key = auth.config['SECRET_KEY']
-
 token = ""
+
 # region spotify login
 @app.route("/")
 def landing():

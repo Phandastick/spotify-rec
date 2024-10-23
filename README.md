@@ -26,6 +26,15 @@ pipenv shell
 pipenv install requirements.txt
 ```
 
+### Setting up env
+1. create .env
+2. get CLIENT_ID and CLIENT_SECRET
+3. Generate SECRET_KEY with
+```
+import os
+os.urandom(24)
+```
+
 ## Running
 Use flask to start 'webapp' and run the api
 
