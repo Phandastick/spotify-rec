@@ -4,6 +4,7 @@ import requests
 import base64
 from dotenv import dotenv_values
 import urllib
+DOMAINURL = "127.0.0.1:5000"
 
 config = dotenv_values()
 
@@ -64,7 +65,7 @@ def getAuthorizationCode(scope):
     params = {
         'client_id': client_id,
         'response_type': response_type,
-        'redirect_uri': redirect_url,
+        'redirect_uri': f'http://{DOMAINURL}/callback',
         'scope': scope
     }
 
@@ -73,7 +74,7 @@ def getAuthorizationCode(scope):
     return url
 
 def getAuthorizationToken(body):
-    url = 'https://accounts.spotify.com/authorize/api/token'
+    url = 'https://accounts.spotify.com/api/token'
     headers = {
         'Authorization': 'Basic ' + getEncodedClient(),
         'content-type': 'application/x-www-form-urlencoded'
@@ -86,11 +87,10 @@ def getAuthorizationToken(body):
     
     if(res.status_code != 200):
         print('auth.py> Error! - Something went wrong getting Auth Token!')
-        print("\n" + res.text)
-        return
+        print(res.text)
+        return res
     else:
-        resJson = res.json()
-        return resJson['access_token']
+        return res.json()
 
 def getEncodedClient():
     string = config['CLIENT_ID'] + ":" + config['CLIENT_SECRET']

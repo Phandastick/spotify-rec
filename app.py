@@ -1,13 +1,15 @@
-from flask import Flask, jsonify, render_template,redirect, request
+import datetime
+from flask import Flask, jsonify, render_template,redirect, request, session
 import requests, auth
 import newTestPlaylist as spotifyHelper
-
-DOMAINURL = "http://127.0.0.1:5000"
+from auth import DOMAINURL
 
 app = Flask(__name__)
 app.config.update(
     SERVER_NAME = DOMAINURL
 )
+
+app.secret_key = auth.config['SECRET_KEY']
 
 token = ""
 
@@ -39,15 +41,23 @@ def callback():
         req_body = {
             'code': request.args['code'],
             'grant_type': 'authorization_code',
-            'redirect_uri': f'{DOMAINURL}/callback'
-        }
+            'redirect_uri': f'http://{DOMAINURL}/callback'
+        }   
 
         #use auth code to get token
-        token = auth.getAuthorizationToken(req_body)
-        print('app.py: token',token)
-    #if success
-        return redirect('/home')
-    return('Failed to get token from callback')
+        tokeninfo = auth.getAuthorizationToken(req_body)
+
+        if('access_token' in tokeninfo):
+            session['access_token'] = tokeninfo['access_token']
+            session['refresh_token'] = tokeninfo['refresh_token']
+            session['expires_at'] = datetime.datetime.now().timestamp() + tokeninfo['expires_in']
+
+            # print('app.py> token',session['access_token'])
+        #if success
+            return redirect('/home')
+        else:
+            return('app.py/callback> Something failed getting token info!')
+    return('app.py> Failed to get token from callback')
 
 @app.route('/home')
 def home():
@@ -60,8 +70,8 @@ def updatePlaylist():
 
     #get artists and genres
     seed =  spotifyHelper.getSeeds()
-    recTracks = spotifyHelper.getRecs(seed, token)
-    spotifyHelper.updatePlaylist(recTracks)
+    recTracks = spotifyHelper.getRecs(seed, session['access_token'])
+    spotifyHelper.updatePlaylist(recTracks, session['access_token'])
 
     return('Updated Playlist with random songs!')
 

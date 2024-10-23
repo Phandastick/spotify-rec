@@ -45,7 +45,7 @@ def getGenreList():
 
 def getRecs(seeds, access_token):
 
-    print('Calling getRecs with token:',access_token)
+    # print('Calling getRecs with token:',access_token)
     
     # print(data['artistList'])
     # print(data['genreList'])
@@ -94,28 +94,44 @@ def logTracks(tracks):
         f.write(string)
 
 def updatePlaylist(tracks, access_token):
-    # for i in tracks:
-    #     print(i)
+
+    print('''-----------------Updating Playlist----------------------
+            \n Tracks:''')
+    
+    for i in tracks:
+        print(i)
+
+    print('----------------------------------------------------------------------')
+
     url = f'https://api.spotify.com/v1/playlists/{playlistID}/tracks'
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + access_token
     }
-    payload = { 
+    payload = {
         'uris': getStringID(tracks)
     }
 
     res = requests.put(
         url=url,
         headers=headers,
-        data=payload
+        params=payload
     )
-
-    print(res.status_code)
-    print('\nUpdate Playlist: ' + res.text)
+    
+    if (res.status_code != 200):
+        print('newTestPlaylist.py> Update went wrong!')
+        print(res.text)
+    else:
+        print('\nUpdated Playlist successfully!')
+        print('\nUpdated Playlist: ' + res.text)
 
 def getStringID(array):
-    return ",".join(array)
+    newArray = []
+
+    for i in array:
+        newArray.append('spotify:track:'+i)
+
+    return ",".join(newArray)
 
 
 # print(getArtistsList())
@@ -123,4 +139,4 @@ def getStringID(array):
 # getSeeds()
 # print('Token: ', getToken())
 
-# main()
+# main()1
