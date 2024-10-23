@@ -1,12 +1,8 @@
-from auth import getToken
-import requests
-import random
-import json 
+import requests, random, json 
 
-# access_token = getToken('Authorization Code')
 playlistLimit = 50
 playlistID = '467DXKl4bPoQ8rVfwm4kyl'
-# access_token = '1'
+
 
 def main():
     body = getSeeds()
@@ -137,6 +133,5 @@ def getStringID(array):
 # print(getArtistsList())
 
 # getSeeds()
-# print('Token: ', getToken())
 
 # main()1

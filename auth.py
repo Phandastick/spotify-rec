@@ -10,27 +10,6 @@ config = dotenv_values()
 
 # print(config)
 
-def getToken(choice):
-    choice = choice.split(',')
-    authType = ""
-    scope = ""
-    
-    if(len(choice)> 1):
-        authType = choice[0]
-        scope = choice[1]
-    else:
-        authType = choice[0]
-    
-
-    if(authType == 'Client Credentials'):
-        token = getClientCredentials()
-    elif (authType == 'Authorization Code'):
-        token = getAuthorizationCode(scope)
-    else:
-        print('auth.py> Invalid Choice!')
-
-    return token
-
 def getClientCredentials():
     url = 'https://accounts.spotify.com/api/token'
     headers = {
@@ -50,25 +29,26 @@ def getClientCredentials():
         resJson = res.json()
         # print(res.text)
 
-        return resJson['access_token']
+        return resJson
     else:
         print('auth.py> Request for access token failed!')
-        return 
+        print(res)
+        return('auth.py> Error in getting Client Credentials!')
     
 def getAuthorizationCode(scope):
     print('auth.py> Getting auth code...')
     url = 'https://accounts.spotify.com/authorize'
     client_id = config['CLIENT_ID']
     response_type = 'code'
-    redirect_url = 'http://127.0.0.1:5000/callback'
 
     params = {
         'client_id': client_id,
         'response_type': response_type,
         'redirect_uri': f'http://{DOMAINURL}/callback',
-        'scope': scope
+        'scope': scope #dynamic argument
     }
 
+    #returns spotify page url for spotify login
     url = f"{url}?{urllib.parse.urlencode(params)}"
 
     return url
@@ -80,10 +60,11 @@ def getAuthorizationToken(body):
         'content-type': 'application/x-www-form-urlencoded'
     }
 
-    res = requests.post(url=url,
-                        data=body,
-                        headers=headers
-                        )
+    res = requests.post(
+        url=url,
+        data=body,
+        headers=headers
+    )
     
     if(res.status_code != 200):
         print('auth.py> Error! - Something went wrong getting Auth Token!')

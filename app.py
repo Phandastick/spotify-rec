@@ -1,7 +1,6 @@
-import datetime
+import datetime, auth
 from flask import Flask, jsonify, render_template,redirect, request, session
-import requests, auth
-import playlist as spotifyHelper
+import playlist as spotifyAPI
 from auth import DOMAINURL
 
 app = Flask(__name__)
@@ -12,7 +11,7 @@ app.config.update(
 app.secret_key = auth.config['SECRET_KEY']
 
 token = ""
-
+# region spotify login
 @app.route("/")
 def landing():
     print("Starting app...")
@@ -23,7 +22,7 @@ def login():
     print('app.py> Trying to log in...')
     scope = 'playlist-modify-public playlist-modify-private'
 
-    url = spotifyHelper.getToken(f'Authorization Code,{scope}')
+    url = spotifyAPI.getToken(f'Authorization Code,{scope}')
     # print('URL:',url)
 
     return redirect(url)
@@ -48,32 +47,38 @@ def callback():
         tokeninfo = auth.getAuthorizationToken(req_body)
 
         if('access_token' in tokeninfo):
+            # add session token info
             session['access_token'] = tokeninfo['access_token']
             session['refresh_token'] = tokeninfo['refresh_token']
             session['expires_at'] = datetime.datetime.now().timestamp() + tokeninfo['expires_in']
 
             # print('app.py> token',session['access_token'])
-        #if success
             return redirect('/home')
         else:
             return('app.py/callback> Something failed getting token info!')
-    return('app.py> Failed to get token from callback')
+    else:
+        return('app.py> Failed to get token from callback')
+
+# endregion
 
 @app.route('/home')
 def home():
     print("app.py> Login Successful!")
     return redirect('/doUpdatePlaylist')
 
+#region spotify functions
+
 @app.route("/doUpdatePlaylist")
 def updatePlaylist():
     print('app.py> Calling update playlist')
 
     #get artists and genres
-    seed =  spotifyHelper.getSeeds()
-    recTracks = spotifyHelper.getRecs(seed, session['access_token'])
-    spotifyHelper.updatePlaylist(recTracks, session['access_token'])
+    seed =  spotifyAPI.getSeeds()
+    recTracks = spotifyAPI.getRecs(seed, session['access_token'])
+    spotifyAPI.updatePlaylist(recTracks, session['access_token'])
 
     return('Updated Playlist with random songs!')
 
+#endregion
 
 # app.config('./config.cfg')
