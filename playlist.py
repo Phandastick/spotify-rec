@@ -70,8 +70,8 @@ def getRecs(seeds, access_token):
     # print(resJson)
 
     # song is --> tracks --> ID
+    logTracks(resJson)
     tracks = resJson['tracks']
-    logTracks(tracks)
     list = getIDs(tracks)
     
     return list
