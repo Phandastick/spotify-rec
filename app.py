@@ -22,7 +22,7 @@ def login():
     print('app.py> Trying to log in...')
     scope = 'playlist-modify-public playlist-modify-private'
 
-    url = spotifyAPI.getToken(f'Authorization Code,{scope}')
+    url = auth.getAuthorizationCode(scope)
     # print('URL:',url)
 
     return redirect(url)
