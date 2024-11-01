@@ -1,7 +1,8 @@
-import datetime, auth
+from app import auth
+import datetime
 from flask import Flask, jsonify, render_template,redirect, request, session
-import playlist as spotifyAPI
-from auth import DOMAINURL
+import app.playlist as spotifyAPI
+from app.auth import DOMAINURL;
 
 app = Flask(__name__)
 app.config.update(
@@ -78,6 +79,20 @@ def updatePlaylist():
     spotifyAPI.updatePlaylist(recTracks, session['access_token'])
 
     return('Updated Playlist with random songs!')
+
+#endregion
+
+# region youtube search
+# get all links from a given playlist
+# youtube search api for each link
+# put link in log file
+@app.route('/doGetYTLinks')
+def doGetYTLinks():
+    print('app.py> doGetYTLinks Called')
+    reqDict = request.args.to_dict
+    
+
+
 
 #endregion
 
